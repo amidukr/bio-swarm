@@ -1,0 +1,56 @@
+
+
+
+
+
+val writer:CodeWriter = LifeForm.writer;
+
+val variable1:Variable = writer.declareVariable;
+val variable2:Variable = writer.declareVariable;
+val variable3:Variable = writer.declareVariable;
+val output   :Label    = writer.defineLabel;
+
+         writer.writeAdd(output, variable1, variable2);
+         
+val constOne:Variable = writer.declareValue(1);
+
+         writer.writeAdd(output, output, constOne);         
+         writer.writeAdd(output, output, writer.declareValue(1));
+         writer.writeAdd(output, output, 1);
+
+         writer.writeEnd();
+output = writer.write(0);
+
+var byteArray:ByteArray = writer.compile();
+
+
+
+======
+
+
+class CommandSet{
+   case class Instruction(cmd:Int, a1:Argument, a2:Argument, a3: Argument)
+   def instructions:Array[Instruction]
+   
+   class InstructionPatch{
+      
+   }
+   
+   def write(cmd:Int, a1:Argument, a2:Argument, a3: Argument) = instructions.add(Instruction(cmd, a1, a2, a3))
+   
+  
+   def writeAdd(result:Pointer, a:Variable, b:Variable) = write(ADD_COMMAND, a, b)
+   
+   def sequence(f: => Pointer) = {val result = pointer; 
+                                               f(); 
+                                               result}
+   
+   def writeAdd(result:Pointer, a:Int, b:Int) = sequence{
+                                                    val j  = defineLabel
+   
+                                                             writeJump(j)
+                                                    var a1 = write(0);  
+                                                    var b1 = write(0);  
+                                                        j  = write(ADD_COMMAND, a, b)
+                                                }
+}

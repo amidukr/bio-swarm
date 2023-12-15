@@ -1,0 +1,9 @@
+syntax: glob
+.hg/
+bin/
+build/
+lib/src
+.gradle/
+.cache
+*.avi
+log.txt
